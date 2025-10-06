@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-demo-app
+  labels:
+    app: kubernetes-demo-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: kubernetes-demo-app
+  template:
+    metadata:
+      labels:
+        app: kubernetes-demo-app  
+    spec:
+      containers:
+        - name: kubernetes-demo-app
+          image: gilbertkamau/kubernetes_trial:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthyz
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          
