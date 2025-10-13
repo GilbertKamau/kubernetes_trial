@@ -4,3 +4,7 @@ npm-debug.log
 Dockerfile
 .dockerignore
 .git
+*.log
+dist
+Thumbs.db
+.DS_Store
